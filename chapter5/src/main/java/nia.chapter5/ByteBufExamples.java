@@ -52,6 +52,14 @@ public class ByteBufExamples {
     private static final ByteBuf BYTE_BUF_FROM_SOMEWHERE = Unpooled.buffer(1024);
     private static final Channel CHANNEL_FROM_SOMEWHERE = new NioSocketChannel();
     private static final ChannelHandlerContext CHANNEL_HANDLER_CONTEXT_FROM_SOMEWHERE = DUMMY_INSTANCE;
+
+    public static void main(String[] args) {
+//        byteBufSlice();
+//        byteBufCopy();
+//        byteBufSetGet();
+        byteBufWriteRead();
+    }
+
     /**
      * 代码清单 5-1 支撑数组
      */
@@ -203,7 +211,7 @@ public class ByteBufExamples {
         //更新索引 0 处的字节
         buf.setByte(0, (byte)'J');
         //将会成功，因为数据是共享的，对其中一个所做的更改对另外一个也是可见的
-        assert buf.getByte(0) == sliced.getByte(0);
+        System.out.println(buf.getByte(0) == sliced.getByte(0));
     }
 
     /**
@@ -220,7 +228,7 @@ public class ByteBufExamples {
         //更新索引 0 处的字节
         buf.setByte(0, (byte)'J');
         //将会成功，因为数据不是共享的
-        assert buf.getByte(0) != copy.getByte(0);
+        System.out.println(buf.getByte(0) != copy.getByte(0));
     }
 
     /**
@@ -240,8 +248,8 @@ public class ByteBufExamples {
         //打印第一个字符，现在是'B'
         System.out.println((char)buf.getByte(0));
         //将会成功，因为这些操作并不会修改相应的索引
-        assert readerIndex == buf.readerIndex();
-        assert writerIndex == buf.writerIndex();
+        System.out.println(readerIndex == buf.readerIndex());
+        System.out.println(writerIndex == buf.writerIndex());
     }
 
     /**
@@ -259,9 +267,9 @@ public class ByteBufExamples {
         int writerIndex = buf.writerIndex();
         //将字符 '?'追加到缓冲区
         buf.writeByte((byte)'?');
-        assert readerIndex == buf.readerIndex();
-        //将会成功，因为 writeByte()方法移动了 writerIndex
-        assert writerIndex != buf.writerIndex();
+        System.out.println(readerIndex == buf.readerIndex());
+        //将会失败，因为 writeByte()方法移动了 writerIndex
+        System.out.println(writerIndex == buf.writerIndex());
     }
 
     private static void handleArray(byte[] array, int offset, int len) {}
